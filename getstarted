@@ -1,0 +1,32 @@
+##ansible install
+yum install -y ansible
+
+##询问所有主机能否ping通
+ansible all -m ping
+
+##让所有的机器执行某个命令
+ansible all  -m shell -a 'echo hello'
+
+##查看其它机器的jps进程
+ansible all -m shell -a 'jps'
+
+##将本机的某个文件传送到指定的机器上
+ansible test -m copy -a "src=/etc/hosts dest=/tmp/hosts"
+
+##将本地的脚本在远程机器执行
+ansible all -m script -a "/root/hequan/shell/t.sh" -k
+
+##在远程主机上批量创建用户
+ansible all -m user -a "name=small   shell=/bin/bash home=/home/small state=present"
+
+
+ansible-playbook -C -i hosts deploy.yml
+ansible-playbook -C -i hosts stop_hadoop.yml
+
+ansible-playbook -i hosts stop_hadoop.yml
+ansible-playbook -i hosts deploy.yml
+
+ansible all  -m shell -a 'ps -ef  |grep datanode'
+ansible all  -m shell -a 'jps'
+
+ ansible all -m copy -a "src=/data/services/hadoop-2.7.2/etc/hadoop/hdfs-site.xml dest=/data/services/hadoop-2.7.2/etc/hadoop/hdfs-site.xml"

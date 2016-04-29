@@ -1,0 +1,53 @@
+- hosts: zookeepers
+  remote_user: "{{ remote_user }}"
+
+  tasks:
+  - name: stop the zookeeper
+    action: command {{ service_dir }}/zookeeper-{{ zookeeper_version }}/bin/zkServer.sh stop
+
+- hosts: namenodes 
+  remote_user: "{{ remote_user }}"
+
+  tasks:
+  - name: stop the hdfs namenode
+    action: command {{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/hadoop-daemon.sh --script hdfs stop namenode
+
+  - name: stop the hdfs namenode
+    action: command {{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/hadoop-daemon.sh --script hdfs stop zkfc
+
+- hosts: datanodes 
+  remote_user: "{{ remote_user }}"
+
+  tasks:
+  - name: stop the hdfs datanodes
+    action: command {{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/hadoop-daemon.sh --script hdfs stop datanode
+
+- hosts: journalnodes 
+  remote_user: "{{ remote_user }}"
+
+  tasks:
+  - name: stop the hdfs datanodes
+    action: command {{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/hadoop-daemon.sh --script hdfs stop journalnode
+
+
+- hosts: resourceManagers
+  remote_user: "{{ remote_user }}"
+
+  tasks:
+  - name: stop the yarn resourcemanager
+    action: command {{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/yarn-daemon.sh stop resourcemanager
+
+- hosts: jobhistoryNodes 
+  remote_user: "{{ remote_user }}"
+
+  tasks:
+  - name: stop the jobhistory nodes
+    action: command {{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/mr-jobhistory-daemon.sh stop historyserver
+
+
+- hosts: nodeManagers
+  remote_user: "{{ remote_user }}"
+
+  tasks:
+  - name: stop the yarn nodemanagers
+    action: command {{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/yarn-daemon.sh stop nodemanager

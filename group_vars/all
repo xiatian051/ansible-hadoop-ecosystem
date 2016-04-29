@@ -1,0 +1,66 @@
+# Global parameters
+##
+
+#User 
+remote_user: root 
+
+# Cluster name
+site_name: hdfs-cluster 
+yarn_name: yarn-cluster
+
+# IPv4 maximum transmission unit, 9216 is the maximum for Intel/Cisco hardware
+#mtu: 9216
+
+#Version info
+zookeeper_version: 3.4.8
+hadoop_version: 2.7.2
+hive_version: 2.0.0
+spark_version: 1.6.1
+spark_hadoop_version: 2.6
+hbase_version: 1.1.4
+
+#Install file directory
+source_dir: /data/install-files
+
+#Java Home
+# java_home: /usr/java/jdk1.7.0_67
+java_home: /usr/java/jdk1.8.0_77/
+
+#Mysql root passwd
+mysql_root_pass: root
+mysql_hosts_ip: 100.73.12.15
+
+#Service directory
+service_dir: /data/services
+
+#Graphite server
+graphite_server_host: 100.106.15.7
+graphite_server_port: 2003
+
+# Custom configuration
+# This will install additionnal services, update files
+with_elasticsearch: False
+update_iptables: False 
+update_hosts: False 
+install_oracle_jdk: False
+
+with_transfer_tarball: True
+with_zookeeper: True 
+with_hadoop: True
+with_spark: False
+
+with_hive: False
+with_hive_server: False 
+
+with_hbase: True
+
+# For iptable - hosts ip range
+ip_range: 192.168.10.1-192.168.10.255
+
+hadoop:
+  dfs_dir_parent: /data/aaaa_hadoop
+  dfs_dir_nn: /nn
+  dfs_dir_jn: /jn
+  dfs_dir_dn: /dn
+  dfs_dir_tmp: /tmp
+

@@ -1,0 +1,9 @@
+---
+# file: roles/node_manager/tasks/main.yml
+
+- name: start standby datanode
+  action: command {{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/yarn-daemon.sh start nodemanager
+  when: with_hadoop
+  ignore_errors: no 
+  tags:
+    - hadoop

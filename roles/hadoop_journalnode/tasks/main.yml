@@ -1,0 +1,11 @@
+---
+# file: roles/hadoop_journalnode/tasks/main.yml
+
+- name: create the journalnode directory
+  file: path={{ hadoop.dfs_dir_parent }}{{ hadoop.dfs_dir_jn }} owner={{ remote_user }} group={{ remote_user }} state=directory
+  when: with_hadoop
+  tags: hadoop
+
+- name: start the journalnode
+  command: su - {{ remote_user }} -c "{{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/hadoop-daemon.sh start journalnode"
+  when: with_hadoop

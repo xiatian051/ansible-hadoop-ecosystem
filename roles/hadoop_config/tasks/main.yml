@@ -1,0 +1,35 @@
+---
+# file: roles/hadoop_config/tasks/main.yml
+
+- name: unzip the Hadoop to service directory
+  action: unarchive src={{ source_dir }}/hadoop-{{ hadoop_version }}.tar.gz dest={{ service_dir }}  owner={{ remote_user }} group={{ remote_user }} copy=no
+  when: with_hadoop
+  tags:
+   - hadoop
+   - slaves
+
+- name: create hadoop dn_sockets data folder
+  file: dest={{ service_dir }}/hadoop-{{ hadoop_version }}/dn_sockets owner={{ remote_user }} group={{ remote_user }}  state=directory
+  when: with_hadoop
+
+- name: configure hadoop conf
+  template: src={{ item }} dest={{ service_dir }}/hadoop-{{ hadoop_version }}/etc/hadoop/{{ item }} owner={{ remote_user }}  group={{ remote_user }} mode=0644
+  when: with_hadoop
+
+  with_items:
+    - core-site.xml
+    - hadoop-env.sh
+    - hadoop-metrics2.properties
+    - hdfs-site.xml
+    - slaves
+    - excludes
+    - mapred-site.xml
+    - yarn-site.xml 
+    - fair-scheduler.xml
+    - rack.data
+    - rack.py
+    - yarn-excludes
+  tags:
+    - hadoop
+    - restartHdfs
+    - slaves

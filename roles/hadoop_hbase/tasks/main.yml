@@ -1,0 +1,16 @@
+- name: unzip the hbase to service directory
+  action: unarchive src={{ source_dir }}/hbase-{{ hbase_version }}-bin.tar.gz dest={{ service_dir }} copy=no
+  when: with_hbase
+  tags:
+   - hbase
+
+- name: generate config for hbase
+  template: src={{ item }} dest={{ service_dir }}/hbase-{{ hbase_version }}/conf/{{ item }} owner={{ remote_user }} mode=0644
+  when: with_hbase
+  tags:
+   - hbase
+  with_items:
+    - backup-masters
+    - hbase-env.sh
+    - hbase-site.xml
+    - regionservers

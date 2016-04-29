@@ -1,0 +1,22 @@
+- name: create database for hive
+  mysql_db: name=hive login_user=root login_password={{ mysql_root_pass }} state=present
+  when: with_hive_server
+
+- name: start the hive metastore service
+  shell: nohup {{ service_dir }}/apache-hive-{{ hive_version }}-bin/bin/hive --service metastore > {{ service_dir }}/apache-hive-{{ hive_version }}-bin/log/metastore.log 2>&1 &
+  when: with_hive_server
+  environment:
+    HADOOP_HOME: "{{ service_dir }}/hadoop-{{ hadoop_version }}/"
+
+- name: use tool to init hive
+  action: command {{ service_dir }}/apache-hive-{{ hive_version }}-bin/bin/schematool -dbType mysql -initSchema 
+  when: with_hive_server
+  environment:
+    HADOOP_HOME: "{{ service_dir }}/hadoop-{{ hadoop_version }}/"
+
+- name: start the hive server2 service
+  shell: nohup {{ service_dir }}/apache-hive-{{ hive_version }}-bin/bin/hive --service hiveserver2 > {{ service_dir }}/apache-hive-{{ hive_version }}-bin/log/hiveserver2.log 2>&1 &
+  when: with_hive_server
+  environment:
+    HADOOP_HOME: "{{ service_dir }}/hadoop-{{ hadoop_version }}/"
+

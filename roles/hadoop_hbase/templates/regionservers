@@ -1,0 +1,2 @@
+{% for host in groups['regionServers'] %}{{ hostvars[host].ipv4_address }}
+{% endfor %}

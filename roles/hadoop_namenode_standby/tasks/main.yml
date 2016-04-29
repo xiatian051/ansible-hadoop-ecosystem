@@ -1,0 +1,29 @@
+---
+# file: roles/namenode_standby/tasks/main.yml
+
+- name: create the name node data directory
+  file: path={{ hadoop.dfs_dir_parent  }}{{ hadoop.dfs_dir_nn }} owner={{ remote_user }} group={{ remote_user }} state=directory
+  when: with_hadoop
+  tags: hadoop
+
+- name: create the name node data directory
+  file: path={{ hadoop.dfs_dir_parent  }}{{ hadoop.dfs_dir_tmp }} owner={{ remote_user }} group={{ remote_user }} state=directory
+  when: with_hadoop
+  tags: hadoop
+
+- name: wait for the first namenode to come online
+  wait_for: host={{ hostvars[groups['namenodes'][0]].ipv4_address }} port=50070
+  when: with_hadoop
+  tags: hadoop
+
+- name: bootstrap the standby namenode
+  shell: creates={{ hadoop.dfs_dir_parent  }}{{ hadoop.dfs_dir_nn }}/.bootstrapped su - {{ remote_user }} -c "{{ service_dir }}/hadoop-{{ hadoop_version }}/bin/hdfs namenode -bootstrapStandby -force"; touch {{ hadoop.dfs_dir_parent  }}{{ hadoop.dfs_dir_nn }}/.bootstrapped
+  when: with_hadoop
+  tags: hadoop
+
+- name: start standby datanode
+  command: su - {{ remote_user }} -c "{{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/hadoop-daemon.sh start namenode"
+  ignore_errors: no 
+  when: with_hadoop
+  tags:
+    - hadoop

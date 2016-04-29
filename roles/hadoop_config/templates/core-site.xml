@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- {{ ansible_managed }} -->
+
+<configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://{{ site_name|lower }}</value>
+        <final>true</final>
+    </property>
+    <property>
+       	<name>hadoop.tmp.dir</name>
+    	<value>{{ hadoop['dfs_dir_parent'] }}{{ hadoop['dfs_dir_tmp'] }}</value>
+ 	<description>Abase for other temporary directories.</description>
+     </property>
+
+    <!-- add for you-->
+    <property>
+        <name>hadoop.http.staticuser.user</name>
+        <value>hadoop</value>
+        <description>
+            The user name to filter as, on static web filters
+            while rendering content. An example use is the HDFS
+            web UI (user to be used for browsing files).
+        </description>
+    </property>
+    <!-- rack config -->
+    <property>
+        <name>net.topology.script.file.name</name>
+        <value>{{ service_dir }}/hadoop-{{ hadoop_version }}/etc/hadoop/rack.py</value>
+        <description> The script name that should be invoked to resolve DNS names to
+            NetworkTopology names. Example: the script would take host.foo.bar as an
+            argument, and return /rack1 as the output.
+        </description>
+    </property>
+
+    <property>
+        <name>net.topology.script.number.args</name>
+        <value>1</value>
+        <description> The max number of args that the script configured with
+            net.topology.script.file.name should be run with. Each arg is an
+            IP address.
+        </description>
+    </property>
+
+    <!-- trash config -->
+    <property>
+        <name>fs.trash.interval</name>
+        <value>1440</value>
+        <description>Number of minutes after which the checkpoint
+            gets deleted.  If zero, the trash feature is disabled.
+            This option may be configured both on the server and the
+            client. If trash is disabled server side then the client
+            side configuration is checked. If trash is enabled on the
+            server side then the value configured on the server is
+            used and the client configuration value is ignored.
+        </description>
+    </property>
+    <property>
+        <name>fs.trash.checkpoint.interval</name>
+        <value>30</value>
+        <description>Number of minutes between trash checkpoints.
+            Should be smaller or equal to fs.trash.interval. If zero,
+            the value is set to the value of fs.trash.interval.
+            Every time the checkpointer runs it creates a new checkpoint
+            out of current and removes checkpoints created more than
+            fs.trash.interval minutes ago.
+        </description>
+    </property>
+
+    <!-- rpc -->
+    <property>
+        <name>ipc.server.listen.queue.size</name>
+        <value>32768</value>
+        <description>Indicates the length of the listen queue for servers accepting
+            client connections.
+        </description>
+    </property>
+
+    <!-- io-->
+    <property>
+        <name>io.file.buffer.size</name>
+        <value>262144</value>
+        <final>true</final>
+    </property>
+    <property>
+        <name>io.native.lib.available</name>
+        <value>true</value>
+        <description>Should native hadoop libraries, if present, be used.</description>
+    </property>
+    <property>
+        <name>io.compression.codecs</name>
+        <value>org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.SnappyCodec</value>
+        <final>true</final>
+    </property>
+
+</configuration>

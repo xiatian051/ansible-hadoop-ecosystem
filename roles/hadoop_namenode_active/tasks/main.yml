@@ -1,0 +1,30 @@
+---
+# file: roles/namenode_active/tasks/main.yml
+
+- name: create the name node data directory
+  file: path={{ hadoop.dfs_dir_parent  }}{{ hadoop.dfs_dir_nn }} owner={{ remote_user }} group={{ remote_user }} state=directory
+  when: with_hadoop
+  tags: hadoop
+
+- name: create the name node data directory
+  file: path={{ hadoop.dfs_dir_parent  }}{{ hadoop.dfs_dir_tmp }} owner={{ remote_user }} group={{ remote_user }} state=directory
+  when: with_hadoop
+  tags: hadoop
+
+- name: format the namenode - WILL NOT FORMAT IF  current/VERSION EXISTS TO AVOID DATA LOSS
+  command: creates={{ hadoop.dfs_dir_parent  }}{{ hadoop.dfs_dir_nn }}/current/VERSION su - {{ remote_user }} -c "{{ service_dir }}/hadoop-{{ hadoop_version }}/bin/hdfs namenode -format -force"
+  when: with_hadoop
+  tags: hadoop
+
+- name: format hadoop-hdfs-zkfc
+  command: creates={{ hadoop.dfs_dir_parent  }}{{ hadoop.dfs_dir_nn }}/.zkfsformatted su - {{ remote_user }} -c " {{ service_dir }}/hadoop-{{ hadoop_version }}/bin/hdfs zkfc -formatZK -force"; touch {{ hadoop.dfs_dir_parent  }}{{ hadoop.dfs_dir_nn }}/.zkfsformatted
+  when: with_hadoop
+  tags:
+    - hadoop
+
+- name: start primary namenode
+  command:  su - {{ remote_user }} -c "{{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/hadoop-daemon.sh start namenode"
+  ignore_errors: no
+  when: with_hadoop 
+  tags:
+    - hadoop

@@ -1,0 +1,16 @@
+---
+# file: roles/hadoop_datanode/tasks/main.yml
+
+- name: create the datanode directory
+  file: path={{ hadoop.dfs_dir_parent }}{{ hadoop.dfs_dir_dn }} owner={{ remote_user }} group={{ remote_user }} state=directory
+  when: with_hadoop
+  tags:
+    - hadoop
+    - slaves
+
+- name: start the datanode
+  command: su - {{ remote_user }} -c "{{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/hadoop-daemon.sh start datanode"
+  #command: action {{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/hadoop-daemon.sh start datanode
+  when: with_hadoop
+  tags:
+    - hadoop

@@ -1,0 +1,117 @@
+---
+# Site Configuration
+# ==================
+
+- hosts: all
+  tasks:
+    - name: determine interface
+      set_fact: ipv4_address="{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}"
+      tags:
+        - slaves
+        - hbase
+
+# Deploy the default roles to all nodes
+- hosts: all
+  roles:
+    - common
+    - transfer_tarball
+    - hadoop_config
+
+# HADOOP
+# ======
+
+- hosts: zookeepers
+  roles:
+    - zookeeper_server
+
+- hosts: journalnodes
+  roles:
+    - hadoop_journalnode
+
+# Create first nameNode
+## This will be the active node
+- hosts: namenodes[0]
+  roles:
+    - hadoop_namenode_active
+
+# Create standby datanode
+##
+- hosts: namenodes[1]
+  roles:
+    - hadoop_namenode_standby
+
+# Starting Hadoop HDFS Zookeeper Failover Controller
+##
+- hosts: namenodes
+  tasks:
+    - name: starting Hadoop HDFS Zookeeper Failover Controller
+      action: command {{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/hadoop-daemon.sh start zkfc
+      ignore_errors: no
+      when: with_hadoop
+      tags:
+       - hadoop
+
+# Add datanodes
+##
+- hosts: datanodes
+  roles:
+    - hadoop_datanode
+
+# Starting yarn resources managers
+- hosts: resourceManagers
+  roles:
+   - hadoop_resource_manager
+
+- hosts: nodeManagers
+  roles:
+   - hadoop_node_manager
+
+# Starting jobhistory server
+- hosts: jobhistoryNodes
+  roles:
+   - hadoop_jobhistory_server
+
+# Add hive
+- hosts: all 
+  roles: 
+   - hadoop_hive
+  tags: 
+   - hive
+
+- hosts: hiveServer
+  roles:
+   - hadoop_hive_server
+  tags:
+   - hive_server 
+
+# Add Spark
+##
+- hosts: all 
+  roles:
+    - hadoop_spark
+
+# Add HMasters & regionServers
+- hosts: HMaster
+  roles:
+   - hadoop_hbase
+  tags: 
+   - hbase
+
+- hosts: BHMaster
+  roles:
+   - hadoop_hbase
+  tags: 
+   - hbase
+
+- hosts: regionServers
+  roles:
+   - hadoop_hbase
+  tags: 
+   - hbase
+
+- hosts: HMaster
+  tasks:
+   - name: starting HBase
+     action: command su - {{ remote_user }} -c "{{ service_dir }}//hbase-{{ hbase_version }}/bin/start-hbase.sh"
+  tags: 
+   - hbase

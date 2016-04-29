@@ -1,0 +1,9 @@
+---
+# file: roles/namenode_standby/tasks/main.yml
+
+- name: start resource manager node
+  action: command {{ service_dir }}/hadoop-{{ hadoop_version }}/sbin/yarn-daemon.sh start resourcemanager
+  ignore_errors: no 
+  when: with_hadoop
+  tags:
+    - hadoop

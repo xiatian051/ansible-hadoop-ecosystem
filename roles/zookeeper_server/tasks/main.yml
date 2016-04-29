@@ -1,0 +1,24 @@
+---
+# file: roles/zookeeper_server/tasks/main.yml
+
+- name: unzip the Zookeeper to service directory
+  action: unarchive src={{ source_dir }}/zookeeper-{{ zookeeper_version }}.tar.gz dest={{ service_dir }} copy=no
+  when: with_zookeeper
+  tags: zookeeper
+
+- name: configure ZooKeeper conf
+  template: src=zoo.cfg dest={{ service_dir }}/zookeeper-{{ zookeeper_version }}/conf/zoo.cfg
+  when: with_zookeeper
+  tags:
+    - zookeeper
+
+- name: initialize ZooKeeper
+  shell: command echo {{zookeeper_id }} > {{ service_dir }}/zookeeper-{{ zookeeper_version }}/myid
+  when: with_zookeeper
+  tags: zookeeper
+
+- name: start ZooKeeper
+  command:  su - {{ remote_user }} -c "{{ service_dir }}/zookeeper-{{ zookeeper_version }}/bin/zkServer.sh start"
+  when: with_zookeeper
+  tags: zookeeper
+

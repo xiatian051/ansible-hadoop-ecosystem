@@ -1,0 +1,57 @@
+- name: mkdir for install files
+  action: file path={{ source_dir }} state=directory mode=0755
+  when: with_transfer_tarball
+  tags:
+    - copy_tarball
+
+#- name: wget zookeeper tarball
+#  shell: chdir={{ source_dir }}  wget http://archive.apache.org/dist/zookeeper/zookeeper-{{ zookeeper_version }}/zookeeper-{{ zookeeper_version }}.tar.gz
+  
+#- name: wget hadoop tarball
+#  shell: chdir={{ source_dir }} wget http://archive.apache.org/dist/hadoop/common/hadoop-{{ hadoop_version }}/hadoop-{{ hadoop_version }}.tar.gz
+
+#- name: wget hive tarball
+#  shell: chdir={{ source_dir }} wget http://archive.apache.org/dist/hive/stable-2/apache-hive-{{ hive_version }}-bin.tar.gz
+
+#- name: wget hbase tarball
+#  shell: chdir={{ source_dir }} wget http://archive.apache.org/dist/hbase/stable/hbase-{{ hbase_version }}-bin.tar.gz
+
+#- name: wget spark tarball
+#  shell: chdir= {{ source_dir }} wget http://archive.apache.org/dist/spark/spark-1.6.1/spark-1.6.1-bin-hadoop2.6.tgz
+
+- name: copy hadoop install file
+  action: copy src=./install-files/hadoop-{{ hadoop_version }}.tar.gz dest={{ source_dir }}/hadoop-{{ hadoop_version }}.tar.gz owner={{ remote_user }} mode=0644
+  when: with_transfer_tarball
+  tags:
+    - copy_tarball
+
+
+- name: copy hive install file
+  action: copy src=./install-files/apache-hive-{{ hive_version }}-bin.tar.gz dest={{ source_dir }}/apache-hive-{{ hive_version }}-bin.tar.gz owner={{ remote_user }} mode=0644
+  when: with_transfer_tarball
+  tags:
+    - copy_tarball
+
+- name: copy spark install file
+  action: copy src=./install-files/spark-{{ spark_version }}-bin-hadoop{{ spark_hadoop_version }}.tgz dest={{ source_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz owner={{ remote_user }} mode=0644
+  when: with_transfer_tarball
+  tags:
+    - copy_tarball
+
+- name: copy hbase install file
+  action: copy src=./install-files/hbase-{{ hbase_version }}-bin.tar.gz dest={{ source_dir }}/hbase-{{ hbase_version }}-bin.tar.gz owner={{ remote_user }} mode=0644
+  when: with_transfer_tarball
+  tags:
+    - copy_tarball
+
+- name: copy zookeeper install file
+  action: copy src=./install-files/zookeeper-{{ zookeeper_version }}.tar.gz dest={{ source_dir }}/zookeeper-{{ zookeeper_version }}.tar.gz owner={{ remote_user }} mode=0644
+  when: with_transfer_tarball
+  tags:
+    - copy_tarball
+
+- name: copy mysql connector java jar
+  action: copy src=./install-files/mysql-connector-java-5.1.24.jar dest={{ source_dir }}/mysql-connector-java-5.1.24.jar owner={{ remote_user }} mode=0644
+  when: with_transfer_tarball
+  tags:
+    - copy_tarball

@@ -1,0 +1,12 @@
+---
+# file: roles/hadoop_spark/tasks/main.yml
+
+- name: unzip the spark to service directory
+  action: unarchive src={{ source_dir }}/spark-{{ spark_version }}-bin-hadoop-{{ hadoop_version }}.tgz dest={{ service_dir }} copy=no
+  when: with_spark
+  tags: spark
+
+- name: generate spark-env.j2 for spark
+  template: src=spark-env.j2 dest={{ service_dir }}/spark-{{ spark_version }}-bin-hadoop-{{ spark_hadoop_version }}/conf/spark-env.sh owner={{ remote_user }} mode=0644
+  when: with_spark
+  tags: spark

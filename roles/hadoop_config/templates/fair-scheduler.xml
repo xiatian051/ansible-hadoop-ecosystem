@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<allocations>
+
+<!--
+  <resourceGroups>
+    <resourceGroup name="rg1">
+      <nodes>ochadoop90,ochadoop91</nodes>
+    </resourceGroup>
+    <resourceGroup name="rg2">
+      <nodes>ochadoop92,ochadoop93</nodes>
+    </resourceGroup>
+    <resourceGroup name="rg3">
+      <nodes>ochadoop92,ochadoop93,ochadoop94,ochadoop95,ochadoop96</nodes>
+    </resourceGroup>
+    <resourceGroup name="rg4">
+      <nodes>ochadoop94,ochadoop95,ochadoop96</nodes>
+    </resourceGroup>
+  </resourceGroups>
+-->
+
+  <queue name="root">
+    <aclSubmitApps>root</aclSubmitApps>
+    <aclAdministerApps>root</aclAdministerApps>
+    <queue name="default">
+      <minResources>114688mb, 42vcores</minResources>
+      <weight>4.0</weight>
+      <maxRunningApps>100</maxRunningApps>
+      <schedulingPolicy>fair</schedulingPolicy>
+      <aclSubmitApps>root</aclSubmitApps>
+      <aclAdministerApps>root</aclAdministerApps>
+    </queue>
+    <queue name="root">
+      <minResources>57344mb, 21vcores</minResources>
+      <weight>1.0</weight>
+      <maxRunningApps>10</maxRunningApps>
+      <schedulingPolicy>fair</schedulingPolicy>
+      <aclSubmitApps>root</aclSubmitApps>
+      <aclAdministerApps>root</aclAdministerApps>
+    </queue>
+    <queue name="dmp">
+      <minResources>57344mb, 21vcores</minResources>
+      <weight>1.0</weight>
+      <maxRunningApps>10</maxRunningApps>
+      <schedulingPolicy>fair</schedulingPolicy>
+      <aclSubmitApps>dmpser</aclSubmitApps>
+      <aclAdministerApps>dmpser</aclAdministerApps>
+    </queue>
+    <!--
+    <queue name="q1">
+      <minResources>32768 mb, 0vcores</minResources>
+      <maxResources>71680 mb, 42 vcores</maxResources>
+      <resourceGroup>rg1,rg2</resourceGroup>
+      <weight>1.0</weight>
+      <maxRunningApps>100</maxRunningApps>
+      <schedulingPolicy>fair</schedulingPolicy>
+    </queue>
+    <queue name="q2">
+      <minResources>32768 mb, 0vcores</minResources>
+      <maxResources>122880 mb, 70 vcores</maxResources>
+      <resourceGroup>rg3</resourceGroup>
+      <weight>1.0</weight>
+      <maxRunningApps>100</maxRunningApps>
+      <schedulingPolicy>fair</schedulingPolicy>
+      <aclSubmitApps>ochadoop</aclSubmitApps>
+      <aclAdministerApps>ochadoop</aclAdministerApps>
+    </queue>
+    <queue name="q3">
+      <minResources>32768 mb, 0vcores</minResources>
+      <maxResources>143360 mb, 83 vcores</maxResources>
+      <weight>1.0</weight>
+      <maxRunningApps>100</maxRunningApps>
+      <schedulingPolicy>fair</schedulingPolicy>
+    </queue>
+    <queue name="q4">
+      <minResources>32768 mb, 0vcores</minResources>
+      <maxResources>61440 mb, 36 vcores</maxResources>
+      <resourceGroup>rg4</resourceGroup>
+      <weight>1.0</weight>
+      <maxRunningApps>100</maxRunningApps>
+      <schedulingPolicy>fair</schedulingPolicy>
+    </queue>
+    -->
+  </queue>
+
+  <user name="root">
+    <maxRunningApps>500</maxRunningApps>
+  </user>
+  <userMaxAppsDefault>50</userMaxAppsDefault>
+  <defaultQueueSchedulingPolicy>fair</defaultQueueSchedulingPolicy>
+
+  <queuePlacementPolicy>
+    <rule name="specified" />
+    <rule name="primaryGroup" create="false" />
+    <rule name="user" create="false" />
+    <rule name="default" />
+  </queuePlacementPolicy>
+</allocations>
